@@ -7,32 +7,33 @@ const App = () => {
 
   const handleKey = (event) => {
     if (event.key == "Enter") {
-      if (timeLeft > 0) {
-        setCountDown(timeLeft);
+      let value = 0;
+      if (!timeLeft) {
+        value = 0;
+      }
+      try {
+        value = parseInt(timeLeft);
+        if (value <= 0) {
+          value = 0;
+        }
+      } catch (error) {
+        value = 0;
+      }
+      if (value > 0) {
+        setCountDown(value);
+      } else {
+        setCountDown(0);
       }
     }
   };
 
   const handleChange = (e) => {
     let value = e.target.value;
-    if (!value) {
-      value = 0;
-    }
-    try {
-      value = parseInt(value);
-      if (value <= 0) {
-        value = 0;
-      }
-    } catch (error) {
-      value = 0;
-      // console.log("error is", error);
-    }
     setTimeleft(value);
   };
 
-  var intervalId;
-
   useEffect(() => {
+    var intervalId;
     if (countDown > 0) {
       intervalId = setInterval(() => {
         setCountDown((countDown) => countDown - 1);
