@@ -1,51 +1,66 @@
-import React, { Component, useState, useEffect} from "react";
-import '../styles/App.css';
-
-
+import React, { Component, useState, useEffect } from "react";
+import "../styles/App.css";
 
 const App = () => {
+  const [timeLeft, setTimeleft] = useState(0);
+  const [countDown, setCountDown] = useState(0);
 
-  const [timeLeft , setTimeleft] = useState(0);
-
-  const handleKey = (event) =>{
-    if(event.key == "Enter"){
-      var number = document.getElementById("timeCount").value;
-      console.log(number);
-      if(isNaN(number)){
-        console.log("not a number");
-        document.getElementById("timeCount").value='0';
-        return;
+  const handleKey = (event) => {
+    if (event.key == "Enter") {
+      if (timeLeft > 0) {
+        setCountDown(timeLeft);
       }
-      setTimeleft(parseInt(number));
     }
-  }
+  };
+
+  const handleChange = (e) => {
+    let value = e.target.value;
+    if (!value) {
+      value = 0;
+    }
+    try {
+      value = parseInt(value);
+      if (value <= 0) {
+        value = 0;
+      }
+    } catch (error) {
+      value = 0;
+      // console.log("error is", error);
+    }
+    setTimeleft(value);
+  };
 
   var intervalId;
 
-  useEffect(()=>{
-
-      if(timeLeft > 0){
-        intervalId = setInterval(()=>{
-          setTimeleft((timeLeft)=>timeLeft-1);
-        },1000);
-      }
-      return () => {
-        clearInterval(intervalId); //clearing the last
-      };
-  },[handleKey]);
+  useEffect(() => {
+    if (countDown > 0) {
+      intervalId = setInterval(() => {
+        setCountDown((countDown) => countDown - 1);
+      }, 1000);
+    }
+    return () => {
+      clearInterval(intervalId); //clearing the last
+    };
+  }, [countDown > 0]);
 
   return (
-    
     <div className="wrapper">
       <div id="whole-center">
         <h1>
-          Reverse countdown for<input id="timeCount" onKeyDown={handleKey} /> sec.
+          Reverse countdown for
+          <input
+            id="timeCount"
+            value={timeLeft}
+            onChange={handleChange}
+            onKeyDown={handleKey}
+            // type="number"
+          />{" "}
+          sec.
         </h1>
       </div>
-      <div id="current-time">{timeLeft}</div>
+      <div id="current-time">{countDown}</div>
     </div>
-  )
-}
-
+  );
+};
 
 export default App;
