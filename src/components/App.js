@@ -1,67 +1,52 @@
+
 import React, { Component, useState, useEffect } from "react";
-import "../styles/App.css";
+import '../styles/App.css';
 
 const App = () => {
-  const [timeLeft, setTimeleft] = useState(0);
-  const [countDown, setCountDown] = useState(0);
+  // write your code here
 
-  const handleKey = (event) => {
-    if (event.key == "Enter") {
-      let value = 0;
-      if (!timeLeft) {
-        value = 0;
-      }
-      try {
-        value = parseInt(timeLeft);
-        if (value <= 0) {
-          value = 0;
-        }
-      } catch (error) {
-        value = 0;
-      }
-      if (value > 0) {
-        setCountDown(value);
+  const [counter, setCounter] = useState(0);
+
+ 
+
+  var changeCounter = (e) => {
+    if (e.key === "Enter") {
+      if (isNaN(e.target.value)) {
+        setCounter(0);
       } else {
-        setCountDown(0);
+        setCounter(parseInt(e.target.value));
       }
     }
-  };
-
-  const handleChange = (e) => {
-    let value = e.target.value;
-    setTimeleft(value);
   };
 
   useEffect(() => {
-    var intervalId;
-    if (countDown > 0) {
-      intervalId = setInterval(() => {
-        setCountDown((countDown) => countDown - 1);
-      }, 1000);
-    }
+    const i = setInterval(() => {
+      if (counter === 0) {
+        setCounter(0);
+      }
+      if (counter !== 0) {
+        setCounter(counter - 1);
+      }
+    }, 1000);
+
     return () => {
-      clearInterval(intervalId); //clearing the last
+      clearInterval(i);
     };
-  }, [countDown > 0]);
+  }, [counter]);
+
+
 
   return (
     <div className="wrapper">
       <div id="whole-center">
         <h1>
-          Reverse countdown for
-          <input
-            id="timeCount"
-            value={timeLeft}
-            onChange={handleChange}
-            onKeyDown={handleKey}
-            // type="number"
-          />{" "}
-          sec.
+          Reverse countdown for<input id="timeCount" onKeyDown={changeCounter} /> sec.
         </h1>
       </div>
-      <div id="current-time">{countDown}</div>
+      <div id="current-time">{counter}</div>
     </div>
-  );
-};
+  )
+}
+
 
 export default App;
